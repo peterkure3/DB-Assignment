@@ -8,14 +8,14 @@ db = SQL("sqlite:///thursday.db")
 
 db.execute("CREATE TABLE movies (id INTEGER, title TEXT, PRIMARY KEY (id))")
 
-db.execute("CREATE TABLE genre (movie_id INTEGER, genre TEXT, FOREIGN KEY(movie_id) REFERENCES movie(id))")
+db.execute("CREATE TABLE genres (movie_id INTEGER, genre TEXT, FOREIGN KEY(movie_id) REFERENCES movies(id))")
 
 with open("gross movies.csv", "r") as file:
     reader= csv.DictReader(file)
 
     for row in reader:
         title = row["Film"].strip().capitalize()
-        db.execute = ("INSERT INTO movies (title) VALUES(?)", title)
+        movieId = db.execute("INSERT INTO movies (title) VALUES(?)", title)
 
-        for genre in row["Genre"].split(","):
-            db.execute("INSERT INTO genre (movie_id, genre) VALUES (?,?) ", movieId, genre)
+        genre = row["Genre"].strip().capitalize()
+        db.execute("INSERT INTO genres(genre) VALUES(?) ",genre)
