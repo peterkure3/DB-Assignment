@@ -24,5 +24,5 @@ with open("gross movies.csv", "r") as file:
             
             genre = row["Genre"].strip().capitalize()
 
-            genreId= db.execute("INSERT INTO movie_genre(movies_id) VALUES((SELECT id FROM movies WHERE title=?))", title,)
+            genreId= db.execute("INSERT INTO movie_genre(movies_id) VALUES((SELECT id FROM movies WHERE title=?))", title)
             db.execute("INSERT INTO genres(id,genre) VALUES((SELECT genre_id FROM movie_genre WHERE movies_id = ?),?) ", genreId,genre)
