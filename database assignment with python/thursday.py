@@ -8,14 +8,21 @@ db = SQL("sqlite:///thursday.db")
 
 db.execute("CREATE TABLE movies (id INTEGER, title TEXT, PRIMARY KEY (id))")
 
-db.execute("CREATE TABLE genres (movie_id INTEGER, genre TEXT, FOREIGN KEY(movie_id) REFERENCES movies(id))")
+db.execute("CREATE TABLE movie_genre(movies_id INTEGER, genre_id INTEGER, PRIMARY KEY(genre_id), FOREIGN KEY(movies_id) REFERENCES movies(id))")
+
+db.execute("CREATE TABLE genres (id INTEGER, genre TEXT,PRIMARY KEY (id) FOREIGN KEY(id) REFERENCES movie_genre(genre_id))")
+
 
 with open("gross movies.csv", "r") as file:
     reader= csv.DictReader(file)
 
     for row in reader:
         title = row["Film"].strip().capitalize()
-        movieId = db.execute("INSERT INTO movies (title) VALUES(?)", title)
+        id = db.execute("INSERT INTO movies (title) VALUES(?)", title)
 
-        genre = row["Genre"].strip().capitalize()
-        db.execute("INSERT INTO genres(genre) VALUES(?) ",genre)
+        for genre in row["Genre"].split(","):
+            
+            genre = row["Genre"].strip().capitalize()
+
+            genreId= db.execute("INSERT INTO movie_genre(movies_id) VALUES((SELECT id FROM movies WHERE title=?))", title,)
+            db.execute("INSERT INTO genres(id,genre) VALUES((SELECT genre_id FROM movie_genre WHERE movies_id = ?),?) ", genreId,genre)
